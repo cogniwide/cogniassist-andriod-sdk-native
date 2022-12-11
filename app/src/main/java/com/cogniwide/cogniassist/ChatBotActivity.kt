@@ -29,6 +29,7 @@ class ChatBotActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mChatBotRecyclerAdapter: ChatBotRecyclerAdapter
 
     private var senderID: String = UUID.randomUUID().toString()
+//    private var senderID: String = "default"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +37,14 @@ class ChatBotActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_chat_bot)
 
         mChatBotViewModel =ViewModelProvider(this).get(ChatBotViewModel::class.java)
+        mChatBotViewModel.setSenderID(senderID)
         initViews()
         initRecyclerView()
         subscribeObservers()
 
         mSendBtn.setOnClickListener(this)
 
-        mChatBotViewModel.queryBot(senderID,"/default/welcome")
+        mChatBotViewModel.queryBot("/default/welcome")
 
     }
 
@@ -69,7 +71,7 @@ class ChatBotActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initRecyclerView() {
-        mChatBotRecyclerAdapter = ChatBotRecyclerAdapter()
+        mChatBotRecyclerAdapter = ChatBotRecyclerAdapter(this)
         mChatRecyclerView.layoutManager = LinearLayoutManager(this)
         (mChatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
         mChatRecyclerView.adapter = mChatBotRecyclerAdapter
@@ -94,7 +96,7 @@ class ChatBotActivity : AppCompatActivity(), View.OnClickListener {
                     mMessageET.clearFocus()
 
                     // send user message to chat bot
-                    mChatBotViewModel.queryBot(senderID, message)
+                    mChatBotViewModel.queryBot(message)
                 }
 
 
@@ -115,6 +117,14 @@ class ChatBotActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun queryBot(message: String) {
+        mChatBotViewModel.queryBot(message)
+    }
+
+    fun addUserMessageInConversation(message: String) {
+        mChatBotViewModel.addUserMessageInConversation(message)
     }
 
 

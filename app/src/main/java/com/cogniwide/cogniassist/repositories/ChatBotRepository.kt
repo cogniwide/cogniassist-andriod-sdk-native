@@ -12,6 +12,10 @@ object ChatBotRepository {
 
     private val mChatBotApiClient: ChatBotApiClient = ChatBotApiClient
 
+    fun setSenderID(senderID: String) {
+        mChatBotApiClient.setSenderID(senderID)
+    }
+
     fun getBotMessages(): LiveData<List<BotMessage>> = mChatBotApiClient.getBotMessages()
 
     fun getConversation(): LiveData<MutableList<Message>> = mChatBotApiClient.getConversation()
@@ -20,8 +24,7 @@ object ChatBotRepository {
         mChatBotApiClient.addUserMessageInConversation(userMessage)
     }
 
-
-    fun queryBot(senderID: String, message: String) {
-        mChatBotApiClient.queryBot(senderID, message)
+    fun queryBot(message: String) {
+        mChatBotApiClient.queryBot(message)
     }
 }

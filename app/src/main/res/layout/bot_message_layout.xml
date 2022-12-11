@@ -27,6 +27,7 @@
         tools:text="Hi! My name is Cogniassist" />
 
     <androidx.cardview.widget.CardView
+        android:layout_below="@id/bot_text_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
@@ -44,6 +45,19 @@
             android:background="@drawable/bg_bot_msg"
             android:layout_height="@dimen/spacing_xxh"
             />
+
+
+        <LinearLayout
+            android:id="@+id/bot_btn_msg"
+            android:layout_width="@dimen/spacing_xxh"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            android:background="@drawable/bg_bot_msg"
+            >
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

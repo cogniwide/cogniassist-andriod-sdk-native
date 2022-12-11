@@ -1,21 +1,27 @@
 package com.cogniwide.cogniassist.adapters.viewholders
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cogniwide.cogniassist.ChatBotActivity
 import com.cogniwide.cogniassist.R
 import com.cogniwide.cogniassist.models.Message
 import com.cogniwide.cogniassist.util.Constants
 
-class ChatBotRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatBotRecyclerAdapter// constructor
+    (context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = "ChatBotRecyclerAdapter"
 
     private var mConversation: MutableList<Message> = mutableListOf()
+
+    private var mContext: Context? = context
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -57,19 +63,34 @@ class ChatBotRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             userMessageViewHolder.userMessageTV.text = mConversation[position].message?: Constants.MESSAGE_TEXT_NULL
 
         } else if(itemViewType == Constants.BOT_VIEW) {
+                val botMessageViewHolder = holder as BotMessageViewHolder
+                botMessageViewHolder.botBtnMessage.removeAllViews()
 
-            val botMessageViewHolder = holder as BotMessageViewHolder
-
-            when {
-                mConversation[position].message!=null -> {
+                if (mConversation[position].message!=null)  {
                     botMessageViewHolder.botTextMessage.visibility = View.VISIBLE
-                    botMessageViewHolder.botImageMessage.visibility = View.GONE
-
                     botMessageViewHolder.botTextMessage.text = mConversation[position].message
                 }
 
-                mConversation[position].imageUrl!=null -> {
-                    botMessageViewHolder.botTextMessage.visibility = View.GONE
+                if (mConversation[position].buttons!=null){
+                    botMessageViewHolder.botBtnMessage.visibility = View.VISIBLE
+
+
+                    for(button in mConversation[position].buttons!!) {
+                        // create button
+                        val btn =  Button(holder.itemView.context)
+                        btn.text = button.title
+                        btn.setOnClickListener {
+                            Log.d(TAG, "onBindViewHolder: button clicked: ${button.title}")
+                            if (mContext is ChatBotActivity) {
+                                (mContext as ChatBotActivity).addUserMessageInConversation(button.title)
+                                (mContext as ChatBotActivity).queryBot(button.payload)
+                            }
+                        }
+                        botMessageViewHolder.botBtnMessage.addView(btn)
+                    }
+                }
+
+               if( mConversation[position].imageUrl!=null){
                     botMessageViewHolder.botImageMessage.visibility = View.VISIBLE
 
                     val requestOptions: RequestOptions = RequestOptions()
@@ -81,15 +102,11 @@ class ChatBotRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         .into(botMessageViewHolder.botImageMessage)
                 }
 
-                else -> {
+                if (mConversation[position].message==null && mConversation[position].buttons==null && mConversation[position].imageUrl==null){
                     botMessageViewHolder.botTextMessage.visibility = View.VISIBLE
                     botMessageViewHolder.botImageMessage.visibility = View.GONE
-
                     botMessageViewHolder.botTextMessage.text = Constants.MESSAGE_TEXT_NULL
                 }
-            }
-
-
         }
 
     }

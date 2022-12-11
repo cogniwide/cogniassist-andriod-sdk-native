@@ -10,9 +10,16 @@ import com.cogniwide.cogniassist.util.Constants
 
 class ChatBotViewModel: ViewModel() {
 
+    private var senderID: String = "default"
+
     private val TAG = "ChatBotViewModel"
 
     private val mChatBotRepository: ChatBotRepository = ChatBotRepository
+
+    // constructor
+    init {
+        mChatBotRepository.setSenderID(senderID)
+    }
 
     fun getBotMessages(): LiveData<List<BotMessage>> = mChatBotRepository.getBotMessages()
 
@@ -27,8 +34,12 @@ class ChatBotViewModel: ViewModel() {
         )
     }
 
-    fun queryBot(senderID: String, message: String) {
-        mChatBotRepository.queryBot(senderID, message)
+    fun setSenderID(senderID: String) {
+        this.senderID = senderID
+    }
+
+    fun queryBot(message: String) {
+        mChatBotRepository.queryBot(message)
     }
 
 }

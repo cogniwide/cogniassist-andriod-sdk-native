@@ -35,7 +35,7 @@ class HorizontalDottedProgress : View {
         val paint = Paint()
 
         //set the color for the dot that you want to draw
-        paint.color = Color.parseColor("#FFFFFF")
+        paint.color = Color.parseColor("#808080")
 
         //function to create dot
         createDot(canvas, paint)
